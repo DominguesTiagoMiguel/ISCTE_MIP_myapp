@@ -1,0 +1,398 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_1au081z" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.11.1" modeler:executionPlatform="Camunda Platform" modeler:executionPlatformVersion="7.15.0">
+  <bpmn:process id="ImplementationModel" name="ImplementationModel" isExecutable="true">
+    <bpmn:endEvent id="end_premium" name="Fim do registo">
+      <bpmn:incoming>Flow_0ozgiv6</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:exclusiveGateway id="gateway_mail_code_valid" name="Código correto?" gatewayDirection="Diverging">
+      <bpmn:incoming>Flow_18lcbt0</bpmn:incoming>
+      <bpmn:incoming>Flow_054tce9</bpmn:incoming>
+      <bpmn:outgoing>Flow_1qszr1c</bpmn:outgoing>
+      <bpmn:outgoing>Flow_1wtm3yt</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:endEvent id="end_non_premium" name="Fim do registo">
+      <bpmn:incoming>Flow_0zlwdea</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:exclusiveGateway id="gateway_premium" name="Aderir a conta premium?" gatewayDirection="Diverging">
+      <bpmn:incoming>Flow_1fey5to</bpmn:incoming>
+      <bpmn:outgoing>Flow_0zlwdea</bpmn:outgoing>
+      <bpmn:outgoing>Flow_0ozgiv6</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:exclusiveGateway id="gateway_password" name="Password válida?" gatewayDirection="Diverging">
+      <bpmn:incoming>Flow_1i8gzg9</bpmn:incoming>
+      <bpmn:outgoing>Flow_18lcbt0</bpmn:outgoing>
+      <bpmn:outgoing>Flow_0jhuq26</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:userTask id="TaskPassword" name="Escolher Password" implementation="##WebService">
+      <bpmn:incoming>Flow_1wtm3yt</bpmn:incoming>
+      <bpmn:outgoing>Flow_0qa0jpz</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:exclusiveGateway id="gateway_mail_code" name="Recebeu e-mail com código?" gatewayDirection="Diverging">
+      <bpmn:incoming>Flow_1qszr1c</bpmn:incoming>
+      <bpmn:incoming>Flow_0e1nd4u</bpmn:incoming>
+      <bpmn:outgoing>Flow_1guy5au</bpmn:outgoing>
+      <bpmn:outgoing>Flow_0z62gyk</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:userTask id="TaskPreencheDados" name="Preencher dados utilizador" implementation="##WebService">
+      <bpmn:incoming>Flow_1mdpvsj</bpmn:incoming>
+      <bpmn:outgoing>Flow_0zqdt1n</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:exclusiveGateway id="GatewayVerifyCity" name="Existe?" gatewayDirection="Diverging">
+      <bpmn:incoming>Flow_1guy5au</bpmn:incoming>
+      <bpmn:incoming>Flow_1tdi2a1</bpmn:incoming>
+      <bpmn:outgoing>Flow_1aeboxr</bpmn:outgoing>
+      <bpmn:outgoing>Flow_06p7ht3</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sendTask id="TaskSendEmail" name="Enviar e-mail de confirmação" implementation="##WebService" camunda:delegateExpression="${EmailConfirmationDelegate}">
+      <bpmn:incoming>Flow_06p7ht3</bpmn:incoming>
+      <bpmn:outgoing>Flow_1uq98td</bpmn:outgoing>
+      <bpmn:ioSpecification>
+        <bpmn:dataOutput />
+        <bpmn:inputSet name="DefaultInputSet" />
+        <bpmn:outputSet name="DefaultOutputSet" />
+      </bpmn:ioSpecification>
+    </bpmn:sendTask>
+    <bpmn:startEvent id="UserStartForm" name="UserStartForm">
+      <bpmn:outgoing>Flow_1mdpvsj</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="Flow_054tce9" name="" isImmediate="true" sourceRef="ValidateDiscount" targetRef="gateway_mail_code_valid" />
+    <bpmn:sequenceFlow id="Flow_18lcbt0" name="Não" isImmediate="true" sourceRef="gateway_password" targetRef="gateway_mail_code_valid">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${!ConfirmaPassword}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_1qszr1c" name="Não" isImmediate="true" sourceRef="gateway_mail_code_valid" targetRef="gateway_mail_code">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${!VerificaCodigo}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_1guy5au" name="Não" isImmediate="true" sourceRef="gateway_mail_code" targetRef="GatewayVerifyCity">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${!ConfirmaCodigo}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_1tdi2a1" name="" isImmediate="true" sourceRef="verificaCidadeDelegate" targetRef="GatewayVerifyCity" />
+    <bpmn:sequenceFlow id="Flow_1uq98td" name="" isImmediate="true" sourceRef="TaskSendEmail" targetRef="EmailConfirmation" />
+    <bpmn:sequenceFlow id="Flow_0zqdt1n" name="" isImmediate="true" sourceRef="TaskPreencheDados" targetRef="verificaCidadeDelegate" />
+    <bpmn:sequenceFlow id="Flow_1aeboxr" name="Não" isImmediate="true" sourceRef="GatewayVerifyCity" targetRef="msg_exclusividade">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${!verificaCidade}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_1mdpvsj" name="" isImmediate="true" sourceRef="UserStartForm" targetRef="TaskPreencheDados" />
+    <bpmn:sequenceFlow id="Flow_1wtm3yt" name="Sim" isImmediate="true" sourceRef="gateway_mail_code_valid" targetRef="TaskPassword">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${VerificaCodigo}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_0zlwdea" name="Não" isImmediate="true" sourceRef="gateway_premium" targetRef="end_non_premium">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${!AderePremiumDelegate}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_0ozgiv6" name="Sim" isImmediate="true" sourceRef="gateway_premium" targetRef="end_premium">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${AderePremiumDelegate}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_1fey5to" name="" isImmediate="true" sourceRef="get_discount" targetRef="gateway_premium" />
+    <bpmn:sequenceFlow id="Flow_16i2956" name="" isImmediate="true" sourceRef="create_user" targetRef="get_discount" />
+    <bpmn:sequenceFlow id="Flow_0jhuq26" name="Sim" isImmediate="true" sourceRef="gateway_password" targetRef="create_user">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${ConfirmaPassword}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_0qa0jpz" name="" isImmediate="true" sourceRef="TaskPassword" targetRef="PasswordConfirmation" />
+    <bpmn:sequenceFlow id="Flow_0z62gyk" name="Sim" isImmediate="true" sourceRef="gateway_mail_code" targetRef="TaskInsertDiscount">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${ConfirmaCodigo}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_06p7ht3" name="Sim" isImmediate="true" sourceRef="GatewayVerifyCity" targetRef="TaskSendEmail">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${verificaCidade}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:serviceTask id="get_discount" name="Atribuir código de desconto" camunda:delegateExpression="${AtribuiDescontoDelegate}">
+      <bpmn:incoming>Flow_16i2956</bpmn:incoming>
+      <bpmn:outgoing>Flow_1fey5to</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:serviceTask id="verificaCidadeDelegate" name="Verificar se existe serviço na cidade" camunda:delegateExpression="${verificaCidadeDelegate}">
+      <bpmn:incoming>Flow_0zqdt1n</bpmn:incoming>
+      <bpmn:outgoing>Flow_1tdi2a1</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_0e1nd4u" name="" isImmediate="true" sourceRef="mail" targetRef="gateway_mail_code" />
+    <bpmn:serviceTask id="mail" name="Confirmar se recebeu o código" implementation="##WebService" camunda:delegateExpression="${ConfirmarCodigoDelegate}">
+      <bpmn:incoming>Flow_199r82t</bpmn:incoming>
+      <bpmn:outgoing>Flow_0e1nd4u</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:serviceTask id="ValidateDiscount" name="Verificar código inserido" camunda:delegateExpression="${VerificaCodigoDelegate}">
+      <bpmn:incoming>Flow_1ko3hox</bpmn:incoming>
+      <bpmn:outgoing>Flow_054tce9</bpmn:outgoing>
+      <bpmn:ioSpecification>
+        <bpmn:dataInput />
+        <bpmn:inputSet name="DefaultInputSet" />
+        <bpmn:outputSet name="DefaultOutputSet" />
+      </bpmn:ioSpecification>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_1i8gzg9" sourceRef="PasswordConfirmation" targetRef="gateway_password" />
+    <bpmn:serviceTask id="PasswordConfirmation" name="Confirmar Password" camunda:delegateExpression="${ConfirmaPasswordDelegate}">
+      <bpmn:incoming>Flow_0qa0jpz</bpmn:incoming>
+      <bpmn:outgoing>Flow_1i8gzg9</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:userTask id="TaskInsertDiscount" name="Inserir código" implementation="##WebService">
+      <bpmn:incoming>Flow_0z62gyk</bpmn:incoming>
+      <bpmn:outgoing>Flow_1ko3hox</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:sequenceFlow id="Flow_1ko3hox" name="" isImmediate="true" sourceRef="TaskInsertDiscount" targetRef="ValidateDiscount" />
+    <bpmn:userTask id="create_user" name="Criar utilizador">
+      <bpmn:incoming>Flow_0jhuq26</bpmn:incoming>
+      <bpmn:outgoing>Flow_16i2956</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:sequenceFlow id="Flow_199r82t" sourceRef="EmailConfirmation" targetRef="mail" />
+    <bpmn:userTask id="EmailConfirmation" name="Preencher Confirmação">
+      <bpmn:incoming>Flow_1uq98td</bpmn:incoming>
+      <bpmn:outgoing>Flow_199r82t</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:boundaryEvent id="timmer_event" attachedToRef="create_user">
+      <bpmn:timerEventDefinition id="TimerEventDefinition_0iwtuef">
+        <bpmn:timeDuration xsi:type="bpmn:tFormalExpression">PT20S</bpmn:timeDuration>
+      </bpmn:timerEventDefinition>
+    </bpmn:boundaryEvent>
+    <bpmn:endEvent id="Event_01dlh6i">
+      <bpmn:incoming>Flow_0n514yp</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sendTask id="msg_exclusividade" name="Alerta de exclusividade para Evora" implementation="##WebService" camunda:delegateExpression="${MsgEvoraDelegate}">
+      <bpmn:incoming>Flow_1aeboxr</bpmn:incoming>
+      <bpmn:outgoing>Flow_0n514yp</bpmn:outgoing>
+      <bpmn:ioSpecification>
+        <bpmn:dataOutput />
+        <bpmn:inputSet name="DefaultInputSet" />
+        <bpmn:outputSet name="DefaultOutputSet" />
+      </bpmn:ioSpecification>
+    </bpmn:sendTask>
+    <bpmn:sequenceFlow id="Flow_0n514yp" sourceRef="msg_exclusividade" targetRef="Event_01dlh6i" />
+    <bpmn:textAnnotation id="MainProcess">
+      <bpmn:text>First Name
+Last Name
+Address
+Postal Code
+City
+Email
+Confirmation
+Password
+Discount Code
+User</bpmn:text>
+    </bpmn:textAnnotation>
+  </bpmn:process>
+  <bpmn:error id="Error_0iwckfu" name="data_fill_error" />
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="ImplementationModel">
+      <bpmndi:BPMNShape id="TextAnnotation_1ufysg3_di" bpmnElement="MainProcess">
+        <dc:Bounds x="160" y="590" width="240" height="152" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_1ko3hox_di" bpmnElement="Flow_1ko3hox">
+        <di:waypoint x="1200" y="500" />
+        <di:waypoint x="1230" y="500" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1i8gzg9_di" bpmnElement="Flow_1i8gzg9">
+        <di:waypoint x="1710" y="500" />
+        <di:waypoint x="1742" y="500" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0e1nd4u_di" bpmnElement="Flow_0e1nd4u">
+        <di:waypoint x="1000" y="425" />
+        <di:waypoint x="1030" y="425" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_06p7ht3_di" bpmnElement="Flow_06p7ht3">
+        <di:waypoint x="698" y="265" />
+        <di:waypoint x="698" y="325" />
+        <di:waypoint x="669" y="325" />
+        <di:waypoint x="669" y="385" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="660" y="313" width="19" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0z62gyk_di" bpmnElement="Flow_0z62gyk">
+        <di:waypoint x="1050" y="445" />
+        <di:waypoint x="1050" y="500" />
+        <di:waypoint x="1100" y="500" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1026" y="452" width="19" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0qa0jpz_di" bpmnElement="Flow_0qa0jpz">
+        <di:waypoint x="1560" y="500" />
+        <di:waypoint x="1610" y="500" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0jhuq26_di" bpmnElement="Flow_0jhuq26">
+        <di:waypoint x="1782" y="500" />
+        <di:waypoint x="1889" y="500" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1820" y="480" width="19" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_16i2956_di" bpmnElement="Flow_16i2956">
+        <di:waypoint x="1989" y="500" />
+        <di:waypoint x="2062" y="500" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1fey5to_di" bpmnElement="Flow_1fey5to">
+        <di:waypoint x="2162" y="500" />
+        <di:waypoint x="2235" y="500" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0ozgiv6_di" bpmnElement="Flow_0ozgiv6">
+        <di:waypoint x="2255" y="480" />
+        <di:waypoint x="2255" y="384" />
+        <di:waypoint x="2395" y="384" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2274" y="363" width="19" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0zlwdea_di" bpmnElement="Flow_0zlwdea">
+        <di:waypoint x="2255" y="520" />
+        <di:waypoint x="2255" y="557" />
+        <di:waypoint x="2395" y="557" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2273" y="563" width="21" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1wtm3yt_di" bpmnElement="Flow_1wtm3yt">
+        <di:waypoint x="1430" y="500" />
+        <di:waypoint x="1460" y="500" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1430" y="480" width="19" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1mdpvsj_di" bpmnElement="Flow_1mdpvsj">
+        <di:waypoint x="195" y="245" />
+        <di:waypoint x="264" y="245" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1aeboxr_di" bpmnElement="Flow_1aeboxr">
+        <di:waypoint x="698" y="225" />
+        <di:waypoint x="698" y="121" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="707" y="158" width="21" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0zqdt1n_di" bpmnElement="Flow_0zqdt1n">
+        <di:waypoint x="416" y="245" />
+        <di:waypoint x="500" y="245" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1uq98td_di" bpmnElement="Flow_1uq98td">
+        <di:waypoint x="738" y="425" />
+        <di:waypoint x="770" y="425" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1tdi2a1_di" bpmnElement="Flow_1tdi2a1">
+        <di:waypoint x="600" y="245" />
+        <di:waypoint x="678" y="245" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1guy5au_di" bpmnElement="Flow_1guy5au">
+        <di:waypoint x="1050" y="405" />
+        <di:waypoint x="1050" y="245" />
+        <di:waypoint x="720" y="245" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1026" y="384" width="21" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1qszr1c_di" bpmnElement="Flow_1qszr1c">
+        <di:waypoint x="1410" y="480" />
+        <di:waypoint x="1410" y="329" />
+        <di:waypoint x="1066" y="329" />
+        <di:waypoint x="1066" y="421" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1386" y="449" width="21" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_18lcbt0_di" bpmnElement="Flow_18lcbt0">
+        <di:waypoint x="1762" y="520" />
+        <di:waypoint x="1762" y="615" />
+        <di:waypoint x="1410" y="615" />
+        <di:waypoint x="1410" y="520" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1738" y="527" width="21" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_054tce9_di" bpmnElement="Flow_054tce9">
+        <di:waypoint x="1330" y="500" />
+        <di:waypoint x="1390" y="500" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_199r82t_di" bpmnElement="Flow_199r82t">
+        <di:waypoint x="870" y="425" />
+        <di:waypoint x="900" y="425" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0n514yp_di" bpmnElement="Flow_0n514yp">
+        <di:waypoint x="748" y="90" />
+        <di:waypoint x="852" y="90" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Event_1oys5qe_di" bpmnElement="end_premium">
+        <dc:Bounds x="2395" y="369" width="30" height="30" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2374" y="399" width="70" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_1p9vax4_di" bpmnElement="gateway_mail_code_valid" isMarkerVisible="true">
+        <dc:Bounds x="1390" y="480" width="40" height="40" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1357" y="527" width="79" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_14kvelv_di" bpmnElement="end_non_premium">
+        <dc:Bounds x="2395" y="542" width="30" height="30" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2374" y="572" width="70" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_0xqy12n_di" bpmnElement="gateway_premium" isMarkerVisible="true">
+        <dc:Bounds x="2235" y="480" width="40" height="40" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2276" y="486" width="68" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_0i3fc4j_di" bpmnElement="gateway_password" isMarkerVisible="true">
+        <dc:Bounds x="1742" y="480" width="40" height="40" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1776" y="510" width="87" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0dryd6j_di" bpmnElement="TaskPassword">
+        <dc:Bounds x="1460" y="460" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_1op3xpx_di" bpmnElement="gateway_mail_code" isMarkerVisible="true">
+        <dc:Bounds x="1030" y="405" width="40" height="40" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1105" y="400" width="78" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0ccnlwd_di" bpmnElement="TaskPreencheDados">
+        <dc:Bounds x="264" y="205" width="152" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_1pp9pa8_di" bpmnElement="GatewayVerifyCity" isMarkerVisible="true">
+        <dc:Bounds x="678" y="225" width="40" height="40" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="735" y="255" width="37" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0xnklj4_di" bpmnElement="UserStartForm">
+        <dc:Bounds x="165" y="230" width="30" height="30" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="144" y="262" width="73" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0n1pzev_di" bpmnElement="get_discount">
+        <dc:Bounds x="2062" y="460" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_05nto8w_di" bpmnElement="verificaCidadeDelegate">
+        <dc:Bounds x="500" y="205" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1bo9sjl_di" bpmnElement="ValidateDiscount">
+        <dc:Bounds x="1230" y="460" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_134043q_di" bpmnElement="PasswordConfirmation">
+        <dc:Bounds x="1610" y="460" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0dw1z2z_di" bpmnElement="TaskInsertDiscount">
+        <dc:Bounds x="1100" y="460" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_10litne_di" bpmnElement="create_user">
+        <dc:Bounds x="1889" y="460" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1scizq8_di" bpmnElement="mail">
+        <dc:Bounds x="900" y="385" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_007icat_di" bpmnElement="TaskSendEmail">
+        <dc:Bounds x="602" y="385" width="136" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0026e5a_di" bpmnElement="EmailConfirmation">
+        <dc:Bounds x="770" y="385" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0l0ju9v_di" bpmnElement="msg_exclusividade">
+        <dc:Bounds x="612" y="41" width="136" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_01dlh6i_di" bpmnElement="Event_01dlh6i">
+        <dc:Bounds x="852" y="72" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1s7n7if_di" bpmnElement="timmer_event">
+        <dc:Bounds x="1922" y="442" width="36" height="36" />
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
