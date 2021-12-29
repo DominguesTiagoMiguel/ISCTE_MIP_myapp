@@ -1,0 +1,26 @@
+{
+  "myappApp": {
+    "userStartForm": {
+      "home": {
+        "title": "User Start Forms",
+        "refreshListLabel": "Refresh list",
+        "createLabel": "Create a new User Start Form",
+        "createOrEditLabel": "Create or edit a User Start Form",
+        "notFound": "No User Start Forms found"
+      },
+      "created": "A new User Start Form is created with identifier {{ param }}",
+      "updated": "A User Start Form is updated with identifier {{ param }}",
+      "deleted": "A User Start Form is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete User Start Form {{ id }}?"
+      },
+      "detail": {
+        "title": "User Start Form"
+      },
+      "id": "ID",
+      "firstName": "First Name",
+      "lastName": "Last Name",
+      "email": "Email"
+    }
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "myappApp": {
+    "taskInsertDiscount": {
+      "home": {
+        "title": "Task Insert Discounts",
+        "refreshListLabel": "Refresh list",
+        "createLabel": "Create a new Task Insert Discount",
+        "createOrEditLabel": "Create or edit a Task Insert Discount",
+        "notFound": "No Task Insert Discounts found"
+      },
+      "created": "A new Task Insert Discount is created with identifier {{ param }}",
+      "updated": "A Task Insert Discount is updated with identifier {{ param }}",
+      "deleted": "A Task Insert Discount is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Task Insert Discount {{ id }}?"
+      },
+      "detail": {
+        "title": "Task Insert Discount"
+      },
+      "id": "ID",
+      "discountCode": "Discount Code"
+    }
+  }
+}

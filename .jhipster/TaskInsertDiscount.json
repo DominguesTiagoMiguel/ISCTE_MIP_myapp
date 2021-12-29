@@ -1,0 +1,23 @@
+{
+  "fields": [
+    {
+      "fieldName": "discountCode",
+      "fieldType": "String"
+    }
+  ],
+  "relashionships": [],
+  "entityType": "user-task-form",
+  "processBpmnId": "ImplementationModel",
+  "processEntityName": "ImplementationModel",
+  "taskBpmnId": "TaskInsertDiscount",
+  "domainEntityName": "Userplan",
+  "service": "serviceClass",
+  "dto": "mapstruct",
+  "jpaMetamodelFiltering": false,
+  "readOnly": false,
+  "pagination": "no",
+  "name": "TaskInsertDiscount",
+  "changelogDate": "20211201000001",
+  "skipFakeData": true,
+  "relationships": []
+}

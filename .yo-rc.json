@@ -52,6 +52,7 @@
     "jwtSecretKey": "MzE4N2RiMmQ2YTZjMDc3YTNjNDA3NjI3MmQ0ZWM5MWYxZjBhYzg2ZGFkNzRlYmY1NDJhNDAzYWViNTQxMWUyNWM3ZjllZjNmNTFiYWNiOTE5NGU5YjUyZjRhMWEzM2QyNTQ3ODkzODUxZTc2NWI2NWQ1Mjc0NTI3MzZkMmZiNzE=",
     "clientPackageManager": "npm",
     "clientThemeVariant": "",
-    "languages": ["en"]
+    "languages": ["en"],
+    "entities": ["Userplan"]
   }
 }

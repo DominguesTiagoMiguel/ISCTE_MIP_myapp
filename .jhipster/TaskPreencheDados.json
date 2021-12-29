@@ -1,0 +1,33 @@
+{
+  "fields": [
+    {
+      "fieldName": "address",
+      "fieldType": "String",
+      "fieldReadOnly": false
+    },
+    {
+      "fieldName": "postalCode",
+      "fieldType": "String",
+      "fieldReadOnly": false
+    },
+    {
+      "fieldName": "city",
+      "fieldType": "String",
+      "fieldReadOnly": false
+    }
+  ],
+  "entityType": "user-task-form",
+  "processBpmnId": "ImplementationModel",
+  "processEntityName": "ImplementationModel",
+  "taskBpmnId": "TaskPreencheDados",
+  "domainEntityName": "Userplan",
+  "service": "serviceClass",
+  "dto": "mapstruct",
+  "jpaMetamodelFiltering": false,
+  "readOnly": false,
+  "pagination": "no",
+  "skipFakeData": true,
+  "name": "TaskPreencheDados",
+  "changelogDate": "20210401000005",
+  "relationships": []
+}

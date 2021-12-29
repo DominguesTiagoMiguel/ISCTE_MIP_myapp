@@ -1,0 +1,26 @@
+{
+  "myappApp": {
+    "taskPreencheDados": {
+      "home": {
+        "title": "Task Preenche Dados",
+        "refreshListLabel": "Refresh list",
+        "createLabel": "Create a new Task Preenche Dados",
+        "createOrEditLabel": "Create or edit a Task Preenche Dados",
+        "notFound": "No Task Preenche Dados found"
+      },
+      "created": "A new Task Preenche Dados is created with identifier {{ param }}",
+      "updated": "A Task Preenche Dados is updated with identifier {{ param }}",
+      "deleted": "A Task Preenche Dados is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Task Preenche Dados {{ id }}?"
+      },
+      "detail": {
+        "title": "Task Preenche Dados"
+      },
+      "id": "ID",
+      "address": "Address",
+      "postalCode": "Postal Code",
+      "city": "City"
+    }
+  }
+}

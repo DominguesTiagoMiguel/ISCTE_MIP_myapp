@@ -1,0 +1,30 @@
+{
+  "fields": [
+    {
+      "fieldName": "firstName",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "lastName",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "email",
+      "fieldType": "String"
+    }
+  ],
+  "relashionships": [],
+  "entityType": "start-form",
+  "processBpmnId": "ImplementationModel",
+  "processEntityName": "ImplementationModel",
+  "domainEntityName": "Userplan",
+  "service": "serviceClass",
+  "dto": "mapstruct",
+  "jpaMetamodelFiltering": false,
+  "readOnly": false,
+  "pagination": "no",
+  "name": "UserStartForm",
+  "changelogDate": "20211201000001",
+  "skipFakeData": true,
+  "relationships": []
+}

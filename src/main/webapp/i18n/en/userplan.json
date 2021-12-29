@@ -1,0 +1,25 @@
+{
+  "myappApp": {
+    "userplan": {
+      "home": {
+        "title": "Userplans",
+        "refreshListLabel": "Refresh list",
+        "notFound": "No Userplans found"
+      },
+      "detail": {
+        "title": "Userplan"
+      },
+      "id": "ID",
+      "firstName": "First Name",
+      "lastName": "Last Name",
+      "address": "Address",
+      "postalCode": "Postal Code",
+      "city": "City",
+      "email": "Email",
+      "password": "Password",
+      "discountCode": "Discount Code",
+      "confirmationUser": "Confirmation User",
+      "user": "User"
+    }
+  }
+}

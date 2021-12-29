@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:lang="${#locale.language}" lang="en">
+  <head>
+    <title>Travel Plan Summary</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  </head>
+  <body>
+    <p>Caro <span th:text="${userPlan.firstName}">userName</span></p>
+    <p>Aqui pode encontrar o código de desconto<b th:text="${userPlan.discountCode}">travelName</b></p>
+    <ul>
+      <li><b>Código</b>: <span th:text="$AlemTourBemVindo201918"></span></li>
+    </ul>
+    <p>
+      Obrigada por escolher AlemTour
+      <br />
+      <em>AlemTour Team</em>
+    </p>
+  </body>
+</html>

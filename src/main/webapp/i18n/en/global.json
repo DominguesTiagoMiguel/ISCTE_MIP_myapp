@@ -12,6 +12,12 @@
         "processInstance": "Process Instances",
         "taskInstance": "All Tasks",
         "myCandidateTasks": "My Tasks",
+        "userplan": "Userplan",
+        "implementationModel": "Implementation Model",
+        "userStartForm": "User Start Form",
+        "taskPreencheDados": "Task Preenche Dados",
+        "taskInsertDiscount": "Task Insert Discount",
+        "taskPassword": "Task Password",
         "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
       },
       "account": {
